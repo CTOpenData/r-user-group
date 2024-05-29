@@ -1,2 +1,2 @@
 # r-user-group
-Files for the R user group for CT state agencies
+This repository includes files for the R User Group for CT state agencies. 
