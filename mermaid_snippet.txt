@@ -1,0 +1,8 @@
+```{mermaid}
+flowchart TD
+  A[R version < 4.4.0] --> B(Have a complete backup of code files!)
+  B --> C{Rely on R for production work?}
+  C -->|Yes|D[Seek assistance for migrating]
+  C -->|No|E[Uninstall R and install new version]
+```
+
