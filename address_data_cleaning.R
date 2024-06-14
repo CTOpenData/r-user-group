@@ -42,4 +42,37 @@ addresses_cleaned <- addresses %>%
     State
     )
 
+# pak::pkg_install("tidygeocoder")
+# pak::pkg_install("sf")
+
+ct_towns <- sf::st_read("shapefiles/cb_2017_09_cousub_500k.shp")
+ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp")
+
+addresses_cleaned %>% 
+  mutate(plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State)) %>% 
+  tidygeocoder::geocode(address = plot_address, 
+                        method = "bing") %>% 
+  #                     method = "census") %>% 
+  ggplot() +
+    geom_sf(data = ct_towns, fill = "white") +
+    geom_sf(data = ct_counties, fill = NA, colour = "red")  +
+    # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
+    # borders("county", regions = "connecticut") +
+    geom_point(aes(x = long, y = lat, color = County)) +
+    labs(
+      x = NULL, y = NULL
+    ) +
+    theme_minimal() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank()
+  )
+ggplot(ct_counties) +
+  geom_sf()
+geom_sf(aes(fill = ALAND))
 
