@@ -43,6 +43,10 @@ addresses_cleaned <- addresses %>%
     State
     )
 
+## Okay now we have "corrected addresses" lets
+## put them on a may and show the county and correct
+## town name.
+
 # pak::pkg_install("tidygeocoder")
 # pak::pkg_install("sf")
 # pak::pkg_install("ggrepel")
@@ -58,7 +62,7 @@ addresses_cleaned %>%
   #                     method = "census") %>% 
   ggplot() +
     geom_sf(data = ct_towns, fill = "white") +
-    geom_sf(data = ct_counties, fill = NA, colour = "red")  +
+    geom_sf(data = ct_counties, fill = NA, colour = "darkblue")  +
     # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
     # borders("county", regions = "connecticut") +
     geom_point(aes(x = long, y = lat, color = County)) +
