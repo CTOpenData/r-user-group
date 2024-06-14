@@ -44,6 +44,7 @@ addresses_cleaned <- addresses %>%
 
 # pak::pkg_install("tidygeocoder")
 # pak::pkg_install("sf")
+# pak::pkg_install("ggrepel")
 
 ct_towns <- sf::st_read("shapefiles/cb_2017_09_cousub_500k.shp")
 ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp")
@@ -51,7 +52,8 @@ ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_sh
 addresses_cleaned %>% 
   mutate(plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State)) %>% 
   tidygeocoder::geocode(address = plot_address, 
-                        method = "bing") %>% 
+                        # method = "osm") %>% 
+                       method = "bing") %>% 
   #                     method = "census") %>% 
   ggplot() +
     geom_sf(data = ct_towns, fill = "white") +
@@ -59,6 +61,8 @@ addresses_cleaned %>%
     # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
     # borders("county", regions = "connecticut") +
     geom_point(aes(x = long, y = lat, color = County)) +
+    ggrepel::geom_label_repel(aes(x = long, y = lat, label = Town_Standardized),
+               size = 2) +
     labs(
       x = NULL, y = NULL
     ) +
@@ -72,6 +76,7 @@ addresses_cleaned %>%
     panel.border = element_blank(),
     panel.background = element_blank()
   )
+
 ggplot(ct_counties) +
   geom_sf()
 geom_sf(aes(fill = ALAND))
