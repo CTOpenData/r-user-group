@@ -2,12 +2,13 @@
 
 # If you haven't installed the packages yet, that's the first step 
 # install.packages(c('readr', 'dplyr', 'tidyverse'))
+# pak::pkg_install("tidyverse")
 
 # Load packages used in the script
 library(readr) # readr is package for reading in dataframes from delimited files likes csvs
 library(dplyr) # dplyr is a package for dataframe manipulation 
 library(stringr) # stringr is a package to manipulate strings
-#library (tidyverse) # instead of reading in each of these packages separately, you can also load the tidyverse
+# library (tidyverse) # instead of reading in each of these packages separately, you can also load the tidyverse
 # tidyverse is a collection of packages for data science 
 
 # Load the address data, which is hosted on Github, and save it as a dataframe called addresses
