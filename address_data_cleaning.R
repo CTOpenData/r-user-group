@@ -44,7 +44,7 @@ addresses_cleaned <- addresses %>%
     )
 
 ## Okay now we have "corrected addresses" lets
-## put them on a may and show the county and correct
+## put them on a map and show the county and correct
 ## town name.
 
 # pak::pkg_install("tidygeocoder")
@@ -55,23 +55,25 @@ ct_towns <- sf::st_read("shapefiles/cb_2017_09_cousub_500k.shp")
 ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp")
 
 addresses_cleaned %>% 
-  mutate(plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State)) %>% 
+  mutate(plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State),
+         Town_Standardized = str_to_title(Town_Standardized)) %>% 
   tidygeocoder::geocode(address = plot_address, 
                         # method = "osm") %>% 
-                       method = "bing") %>% 
-  #                     method = "census") %>% 
+                        method = "bing") %>% 
+                        # method = "census") %>% 
   ggplot() +
-    geom_sf(data = ct_towns, fill = "white") +
-    geom_sf(data = ct_counties, fill = NA, colour = "darkblue")  +
-    # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
-    # borders("county", regions = "connecticut") +
-    geom_point(aes(x = long, y = lat, color = County)) +
-    ggrepel::geom_label_repel(aes(x = long, y = lat, label = Town_Standardized),
-               size = 2) +
-    labs(
-      x = NULL, y = NULL
-    ) +
-    theme_minimal() +
+  geom_sf(data = ct_towns, fill = "white") +
+  geom_sf(data = ct_counties, fill = NA, colour = "darkblue", linewidth = 1)  +
+  # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
+  # borders("county", regions = "connecticut") +
+  geom_point(aes(x = long, y = lat, color = County)) +
+  ggrepel::geom_label_repel(aes(x = long, y = lat, label = Town_Standardized),
+                            size = 2.5,
+                            min.segment.length = .25) +
+  labs(
+    x = NULL, y = NULL
+  ) +
+  theme_minimal() +
   theme(
     axis.line = element_blank(),
     axis.text = element_blank(),
