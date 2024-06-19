@@ -106,6 +106,7 @@ adds_to_plot <-
 m <- 
   leaflet::leaflet() %>% 
   leaflet::addTiles() %>%
+  leaflet.extras2::addOpenweatherTiles(layers = "temperature") %>% 
   leaflet::setView(lng = -72.74587984553425, 
                    lat = 41.60828560557468,
                    zoom = 8.8) %>% 
@@ -114,5 +115,27 @@ m <-
                       popup = adds_to_plot$plot_address)
 
 m
+
+map <- leaflet::leaflet() %>% 
+  # leaflet::addProviderTiles("OpenStreetMap") %>% 
+  leaflet::addProviderTiles("OpenWeatherMap") %>% 
+  leaflet::addMarkers(lng = -123.251,
+             lat = 49.263, 
+             popup = "You are here.",
+             options = leaflet::markerOptions(draggable = TRUE, riseOnHover = TRUE)) %>% 
+  leaflet::addCircleMarkers(lng = -123.261,
+                   lat = 49.273, 
+                   popup = "You aren't here.",
+                   fillColor= "red", opacity = 1,
+                   options = leaflet::markerOptions(draggable = FALSE, title = "Whoops")) %>% 
+  leaflet::setView(lng = -123.251,
+          lat = 49.263,
+          zoom = 13)
+
+leaflet::leaflet()  %>%
+  leaflet::addTiles() %>% 
+  leaflet::setView(9, 50, 6) %>%
+  leaflet.extras2::addOpenweatherTiles(layers = "wind")
+
 
 
