@@ -85,7 +85,34 @@ addresses_cleaned %>%
     panel.background = element_blank()
   )
 
-ggplot(ct_counties) +
-  geom_sf()
-geom_sf(aes(fill = ALAND))
+# ggplot(ct_counties) +
+#   geom_sf()
+
+
+adds_to_plot <- 
+  addresses_cleaned %>% 
+  mutate(
+    Town_Standardized = str_to_title(Town_Standardized),
+    `Street address` = str_to_title(`Street address`),
+    plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State)
+  ) %>% 
+  tidygeocoder::geocode(address = plot_address, 
+                        # method = "osm") %>% 
+                        method = "bing")
+# method = "census")
+
+# pak::pkg_install("leaflet")
+
+m <- 
+  leaflet::leaflet() %>% 
+  leaflet::addTiles() %>%
+  leaflet::setView(lng = -72.74587984553425, 
+                   lat = 41.60828560557468,
+                   zoom = 8.8) %>% 
+  leaflet::addMarkers(data = adds_to_plot, 
+                      label = adds_to_plot$plot_address,
+                      popup = adds_to_plot$plot_address)
+
+m
+
 
