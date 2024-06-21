@@ -71,21 +71,22 @@ addresses_cleaned %>%
          Town_Standardized = str_to_title(Town_Standardized)) %>% 
   tidygeocoder::geocode(address = plot_address, 
                         # method = "osm") %>% 
-                        method = "bing") %>% 
+                        # method = "geocodio") %>% 
                         # method = "census") %>% 
+                        method = "bing") %>% 
   ggplot() +
   geom_sf(data = ct_towns, fill = "white") +
   geom_sf(data = ct_counties, fill = NA, colour = "darkblue", linewidth = 1)  +
-  # coord_sf(default_crs = sf::st_crs(4326), label_axes = "----") +
-  # borders("county", regions = "connecticut") +
   geom_point(aes(x = long, y = lat, color = County)) +
   ggrepel::geom_label_repel(aes(x = long, y = lat, label = Town_Standardized),
                             size = 2.5,
                             min.segment.length = .25) +
   labs(
-    x = NULL, y = NULL
+    x = NULL, 
+    y = NULL,
+    title = "Our Cleaned Addresses with County and Town boundaries",
+    caption = "Geocoded with Bing geocoding service"
   ) +
-  ggtitle("Our Cleaned Addresses with County and Town boundaries") +
   theme_minimal() +
   theme(
     axis.line = element_blank(),
@@ -96,9 +97,6 @@ addresses_cleaned %>%
     panel.border = element_blank(),
     panel.background = element_blank()
   )
-
-# ggplot(ct_counties) +
-#   geom_sf()
 
 # pak::pkg_install("janitor")
 
@@ -149,26 +147,6 @@ m <-
 
 m
 
-map <- leaflet::leaflet() %>% 
-  # leaflet::addProviderTiles("OpenStreetMap") %>% 
-  leaflet::addProviderTiles("OpenWeatherMap") %>% 
-  leaflet::addMarkers(lng = -123.251,
-             lat = 49.263, 
-             popup = "You are here.",
-             options = leaflet::markerOptions(draggable = TRUE, riseOnHover = TRUE)) %>% 
-  leaflet::addCircleMarkers(lng = -123.261,
-                   lat = 49.273, 
-                   popup = "You aren't here.",
-                   fillColor= "red", opacity = 1,
-                   options = leaflet::markerOptions(draggable = FALSE, title = "Whoops")) %>% 
-  leaflet::setView(lng = -123.251,
-          lat = 49.263,
-          zoom = 13)
-
-leaflet::leaflet()  %>%
-  leaflet::addTiles() %>% 
-  leaflet::setView(9, 50, 6) %>%
-  leaflet.extras2::addOpenweatherTiles(layers = "wind")
 
 
 
