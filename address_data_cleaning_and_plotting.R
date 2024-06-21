@@ -1,7 +1,7 @@
 # R script to clean messy address data
 # the original script is address_data_cleaning.R
 # After cleaning we'll use R/RStudio to display the addresses
-# on a map in both statis and interactive formats
+# on a map in both static (ggplot2) and interactive (leaflet) formats
 
 
 # If you haven't installed the packages yet, that's the first step
@@ -19,9 +19,9 @@ addresses <- read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group
 # Bring in the ctnamecleaner file from Github
 ct_name_cleaner <- read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
 
-# Someone in the chat half in jest suggested they had more names
+# Someone in the chat, half in jest, suggested they had more names
 # they'd like to clean.  The "cleanest" way to do so is to modify
-# the csv file in github, but it also possible to add it on the fly
+# the csv file in github, but it also possible to add it "on the fly"
 # let's add another common New Britain case
 
 ct_name_cleaner <-
@@ -143,8 +143,6 @@ adds_to_plot <-
 m <-
   leaflet::leaflet() %>%
   leaflet::addTiles() %>%
-  # leaflet.extras2::addOpenweatherTiles(layers = "wind",
-  #                                      opacity = .1) %>%
   leaflet::setView(
     lng = -72.74587984553425,
     lat = 41.60828560557468,
