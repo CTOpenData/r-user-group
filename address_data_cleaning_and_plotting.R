@@ -1,26 +1,38 @@
 # R script to clean messy address data 
+# the original script is address_data_cleaning.R
+# After cleaning we'll use R/RStudio to display the addresses
+# on a map in both statis and interactive formats
+
 
 # If you haven't installed the packages yet, that's the first step 
-# install.packages(c('readr', 'dplyr', 'tidyverse'))
+# install.packages("pak")
 # pak::pkg_install("tidyverse")
 
-# Load packages used in the script
-library(readr) # readr is package for reading in dataframes from delimited files likes csvs
-library(dplyr) # dplyr is a package for dataframe manipulation 
-library(stringr) # stringr is a package to manipulate strings
-# library (tidyverse) # instead of reading in each of these packages separately, you can also load the tidyverse
-# tidyverse is a collection of packages for data science 
+# Very opinionated but I always suggest loading the entire tidyverse first
+# the tidyverse is a collection of packages for data science 
+library(tidyverse) # instead of reading in each of these packages separately
 
-# Load the address data, which is hosted on Github, and save it as a dataframe called addresses
+# Load the address data, which is hosted on Github, and save it as a tibble/dataframe called addresses
 addresses <- read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
 
 # Standardize the town names 
 # Bring in the ctnamecleaner file from Github 
 ct_name_cleaner <- read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
 
+# Someone in the chat half in jest suggested they had more names
+# they'd like to clean.  The "cleanest" way to do so is to modify
+# the csv file in github, but it also possible to add it on the fly
+# let's add another common New Britain case
+
+ct_name_cleaner <- 
+  ct_name_cleaner %>% 
+  add_row(name = "NB", realname = "NEW BRITAIN") %>% 
+  arrange(name)
+
 # Join the addresses dataframe with the ct_name_cleaner dataframe and bring in realname column
 # & clean the zipcodes
-addresses_cleaned <- addresses %>% 
+addresses_cleaned <- 
+  addresses %>% 
   # Make town names uppercase using the mutate function
   mutate(Town = toupper(Town)) %>% 
   # Join with ctnamecleaner on town name
@@ -88,6 +100,7 @@ addresses_cleaned %>%
 # ggplot(ct_counties) +
 #   geom_sf()
 
+# pak::pkg_install("janitor")
 
 adds_to_plot <- 
   addresses_cleaned %>% 
@@ -96,23 +109,43 @@ adds_to_plot <-
     `Street address` = str_to_title(`Street address`),
     plot_address = paste0(`Street address`, ", ", Town_Standardized, ", ", State)
   ) %>% 
-  tidygeocoder::geocode(address = plot_address, 
-                        # method = "osm") %>% 
-                        method = "bing")
-# method = "census")
+  tidygeocoder::geocode(
+    address = plot_address, 
+    # method = "osm",
+    method = "geocodio",
+    # method = "bing",
+    # method = "census", 
+    custom_query = list(fields = "acs-economics"),
+    full_results = TRUE,
+    verbose = TRUE
+  ) %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    hhincome = scales::dollar(fields_acs_economics_median_household_income_total_value),
+    special_label = paste0(formatted_address, 
+                                "<br>", 
+                                address_components_county,
+                                "<br>",
+                                "2021 Census Tract Code = ",
+                                fields_census_2021_tract_code,
+                                "<br>",
+                                "2021 ACS Median Household Income = ",
+                                hhincome)
+         )
 
 # pak::pkg_install("leaflet")
 
 m <- 
   leaflet::leaflet() %>% 
   leaflet::addTiles() %>%
-  leaflet.extras2::addOpenweatherTiles(layers = "temperature") %>% 
+  # leaflet.extras2::addOpenweatherTiles(layers = "wind", 
+  #                                      opacity = .1) %>% 
   leaflet::setView(lng = -72.74587984553425, 
                    lat = 41.60828560557468,
                    zoom = 8.8) %>% 
   leaflet::addMarkers(data = adds_to_plot, 
                       label = adds_to_plot$plot_address,
-                      popup = adds_to_plot$plot_address)
+                      popup = adds_to_plot$special_label)
 
 m
 
