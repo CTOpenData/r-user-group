@@ -152,6 +152,17 @@ m <-
     data = adds_to_plot,
     label = adds_to_plot$plot_address,
     popup = adds_to_plot$special_label
-  )
+  ) %>% 
+  leaflet::addPolygons(
+    data = town_esri_data,
+    fill = NA,
+    color = "red", 
+    weight = 2) %>% 
+  leaflet::addPolygons(
+    data = county_esri_data,
+    fill = NA,
+    color = "blue", 
+    weight = 2)
+
 
 m
