@@ -1,3 +1,6 @@
+# taken from here
+# https://walker-data.com/tidycensus/articles/spatial-data.html
+
 library(tidyverse)
 options(tigris_use_cache = TRUE)
 
@@ -5,17 +8,21 @@ nutmeg <-
   tidycensus::get_acs(
     state = "CT",
     geography = "tract",
-    variables = "B19013_001", #median household income from the 2016-2020 ACS
+    variables = "B19013_001", # median household income from the 2016-2020 ACS
     geometry = TRUE,
     year = 2020
   )
 
 head(nutmeg)
+View(nutmeg)
+nutmeg %>% 
+  filter(is.na(estimate))
 
 nutmeg %>%
   ggplot(aes(fill = estimate)) + 
   geom_sf(color = NA) + 
-  scale_fill_viridis_c(option = "magma") 
+  scale_fill_viridis_c(option = "magma", 
+                       na.value = "white") 
 
 nutmeg2 <- 
   tidycensus::get_decennial(
