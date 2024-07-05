@@ -25,7 +25,15 @@ css: styles.css
 editor: source
 ---
 
-## Installation -- Half the battle {#install-intro}
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+## Installation -- Need a review? {#install-intro}
 
 Getting all the necessary software installed, configured, and playing
 nicely together is honestly half the battle when first adopting `R` & `RStudio` 
@@ -44,24 +52,13 @@ R/RStudio, pak, and the Tidyverse.  There are plenty of other opinions so please
 don't confuse my strong opinions with the *"one right way"* or the *"only
 way"*.
 
-Note that this document is not meant to be the best single source
-set of instructions as a **"DIY"** resource.  This document is meant
-as an outline and notes for a guided session.
+Note that this document may not suffice as a **"DIY"** resource. This document 
+is meant as a short tutorial outline and notes.
 
 :::
 
-
-## Install R{#install-r}
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE
-)
-```
-
-Already have R installed? **Hold on: This is a great time to make sure
-your R installation is current.** Check your current version like so:
+Already have `R` installed? **Hold on: This is a great time to make sure
+your `R` installation is current.** Check your current version like so:
 
 ```{r}
     R.version.string
@@ -69,20 +66,36 @@ your R installation is current.** Check your current version like so:
 
 If your version is not 4.3.n or 4.4.n please skip to @sec-startover.
 
+## RStudio Basics
 
-### Download a ***pre-compiled binary*** of `R` for your OS
+Assuming you already have `R` and `RStudio` installed find the `RStudio` app and start
+it. Do **not** start `R` separately (See @tip-nomenclature for an explanation on what the difference is).
+`RStudio` will handle that for you.
 
-From CRAN <https://cloud.r-project.org> (this will open a new tab
-in your browser).  Without going into the geeky details please
-stick to ***pre-compiled binaries***.  `R` is open source
-and you can build it from scratch and look at every line of code
-if you like, but that's not advisable for a newcomer.
+After a few minutes you should see an interface like this with the `RStudio` 
+"panes".  Don't worry if it's not identical. We'll sort that out in a minute.
 
-Also if you see messages about an inability to "build packages"
-please ignore them for now.  Almost every package you need is
-available without having to have `RTools`.
+![Screenshot showing RStudio panes](https://docs.posit.co/ide/user/ide/get-started/images/rstudio-panes-labeled.jpeg)
 
-![Screenshot showing CRAN download](img/CRAN_splash.png)
+
+
+### Use the Projects Methodology
+
+The [documentation](https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio-projects)
+suggests it and I'm going to ***strongly*** recommend
+using "projects".  Even if you think your work will be so simple that
+it won't need categorization I still recommend it!  It's a place to organize
+and just as importantly it will let RStudio help you be more efficient!
+
+Let's create a new project with `File -> New Project`
+
+![Screenshot RStudio new project](hints_images/file_new_project.png)
+
+The new project wizard will open...
+
+![Screenshot showing project wizard](hints_images/type_of_projects.png)
+Choose the first option... `New Directory`
+
 
 Choose your operating system, in this example Windows and download it.
 **Please make sure you remember where** the downloaded installer is...
