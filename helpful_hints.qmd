@@ -94,10 +94,25 @@ Let's create a new project with `File -> New Project`
 The new project wizard will open...
 
 ![Screenshot showing project wizard](hints_images/type_of_projects.png)
-Choose the first option... `New Directory`
+Choose the first option... `New Directory` and you should see a screen
+similar to this...
+
+![Screenshot showing project wizard](hints_images/project_details.png)
 
 
-Choose your operating system, in this example Windows and download it.
+Give your new project a meaningful name, even if it is a bit silly like this example.
+
+::: {.callout-important}
+`R` and therefore `RStudio` are case sensitive. Also try to use spaces
+and special characters sparingly.  I strongly recommend using underscores
+to separate words.
+:::
+
+***Decision Time*** I encourage you to store all your R projects in one
+place.  In my case regardless of OS I always put a folder on the Desktop
+and label it.  You can use the browse button to do that now.
+
+Windows and download it.
 **Please make sure you remember where** the downloaded installer is...
 
 ![Screenshot showing CRAN download version](img/r_download_version.png)
