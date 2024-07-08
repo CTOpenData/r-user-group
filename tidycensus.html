@@ -438,7 +438,7 @@ it’s own column.</p>
 <p>Now let’s create a output table for Median Age by Sex. We will use
 the <a href="https://cran.r-project.org/web/packages/insight/insight.pdf">insight</a>
 package to create an exportable formatted table.</p>
-<pre class="r"><code>#Dropping Connecticut from the name for a cleaner axis label on chart
+<pre class="r"><code>#Dropping Connecticut from the name for a cleaner chart
 median_age_dec_table_v2 &lt;- median_age_dec_table %&gt;%
   separate(NAME, sep = &quot;,&quot;, c(&quot;County&quot;, NA)) %&gt;%
   rename(`Median Age All` = P13_001N, `Median Age Male`  = P13_002N, `Median Age Female`  = P13_003N) %&gt;%
@@ -509,7 +509,7 @@ export_table(median_age_dec_table_v2, format = &quot;md&quot;) #using the Insigh
 <div id="using-get_acs" class="section level4">
 <h4>Using <code>get_acs()</code></h4>
 <p>Next, we will look at an example of using the American Community
-Survey (ACS). We will pull median household income for the COGS (county
+Survey (ACS). We will pull median household income for the COGs (county
 equivalents) in Connecticut in 2022 from the 5-Year ACS.</p>
 <p>To search variables you can use the <code>load_variables()</code>
 function. For the 1-year estimates,include <code>&quot;acs1&quot;</code>. For the
@@ -563,7 +563,7 @@ it’s own column.</p>
 <p>Now let’s create a output table for Median Age by Sex. We will use
 the <a href="https://cran.r-project.org/web/packages/insight/insight.pdf">insight</a>
 package to create an exportable formatted table.</p>
-<pre class="r"><code>#Dropping Connecticut from the name for a cleaner axis label on chart
+<pre class="r"><code>#Dropping Connecticut from the name for a cleaner table
 median_age_acs_table_v2 &lt;- median_age_acs_table %&gt;%
   separate(NAME, sep = &quot;,&quot;, c(&quot;COG&quot;, NA)) %&gt;%
   rename(`Median Age All` = B23013_001E, `Median Age All MOE` = B23013_001M,
