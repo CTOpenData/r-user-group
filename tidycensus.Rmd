@@ -99,7 +99,7 @@ Now let's create a output table for Median Age by Sex. We will use the [insight]
 
 ```{r dectableplot, warning=FALSE, message=FALSE}
 
-#Dropping Connecticut from the name for a cleaner axis label on chart
+#Dropping Connecticut from the name for a cleaner chart
 median_age_dec_table_v2 <- median_age_dec_table %>%
   separate(NAME, sep = ",", c("County", NA)) %>%
   rename(`Median Age All` = P13_001N, `Median Age Male`  = P13_002N, `Median Age Female`  = P13_003N) %>%
@@ -110,7 +110,7 @@ export_table(median_age_dec_table_v2, format = "md") #using the Insights package
 
 #### Using `get_acs()`
 
-Next, we will look at an example of using the American Community Survey (ACS). We will pull median household income for the COGS (county equivalents) in Connecticut in 2022 from the 5-Year ACS.
+Next, we will look at an example of using the American Community Survey (ACS). We will pull median household income for the COGs (county equivalents) in Connecticut in 2022 from the 5-Year ACS.
 
 To search variables you can use the `load_variables()` function. For the 1-year estimates,include `"acs1"`. For the 5-year estimates, include`"acs5"`.
 
@@ -176,7 +176,7 @@ Now let's create a output table for Median Age by Sex. We will use the [insight]
 
 ```{r acstableplot, warning=FALSE, message=FALSE}
 
-#Dropping Connecticut from the name for a cleaner axis label on chart
+#Dropping Connecticut from the name for a cleaner table
 median_age_acs_table_v2 <- median_age_acs_table %>%
   separate(NAME, sep = ",", c("COG", NA)) %>%
   rename(`Median Age All` = B23013_001E, `Median Age All MOE` = B23013_001M,
