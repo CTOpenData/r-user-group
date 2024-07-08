@@ -1,0 +1,472 @@
+---
+title: "Helpful Hints for new R and RStudio Users"
+author: "Chuck Powell"
+date: last-modified
+date-format: "MM-DD-YYYY"
+description: "A short guide to using R, RStudio, and the Tidyverse"
+format:
+  html:
+    title-block-banner: "#ffffff"
+    title-block-banner-color: "#000000"
+    toc: true
+    embed-resources: true
+    link-external-newwindow: true
+    toc-location: left
+    other-links:
+      - text: RStudio User Guide
+        href: https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio
+      - text: pak R package manager
+        href: https://pak.r-lib.org/
+      - text: The Tidyverse Homepage
+        href: https://www.tidyverse.org/
+      - text: Installing R and RStudio
+        href: https://rawcdn.githack.com/CTOpenData/r-user-group/dafba9abb8a82db57e41196c98cdffe897867052/install_intro_v3.html
+css: styles.css
+editor: source
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
+## Installation -- Need a review? {#install-intro}
+
+Getting all the necessary software installed, configured, and playing
+nicely together is honestly half the battle when first adopting `R` & `RStudio` 
+(See @tip-nomenclature for an explanation on what the difference is).
+Brace yourself for some pain. The upside is that you can give yourself a
+pat on the back once you get through this. And you **WILL** get through
+this.
+
+::: {.callout-note}
+For these sessions I'm going to start with the assumption that you 
+have a current version of `R`, `RStudio`, `pak` and the `Tidyverse` installed.
+
+[This document](https://rawcdn.githack.com/CTOpenData/r-user-group/dafba9abb8a82db57e41196c98cdffe897867052/install_intro_v3.html) 
+is a very *opinionated* set of instructions about installing  
+R/RStudio, pak, and the Tidyverse.  There are plenty of other opinions so please
+don't confuse my strong opinions with the *"one right way"* or the *"only
+way"*.
+
+Note that this document may not suffice as a **"DIY"** resource. This document 
+is meant as a short tutorial outline and notes.
+
+:::
+
+Already have `R` installed? **Hold on: This is a great time to make sure
+your `R` installation is current.** Check your current version like so:
+
+```{r}
+    R.version.string
+```
+
+If your version is not 4.3.n or 4.4.n please skip to @sec-startover.
+
+## RStudio Basics
+
+Assuming you already have `R` and `RStudio` installed find the `RStudio` app and start
+it. Do **not** start `R` separately (See @tip-nomenclature for an explanation on what the difference is).
+`RStudio` will handle that for you.
+
+After a few minutes you should see an interface like this with the `RStudio` 
+"panes".  Don't worry if it's not identical. We'll sort that out in a minute.
+
+![Screenshot showing RStudio panes](https://docs.posit.co/ide/user/ide/get-started/images/rstudio-panes-labeled.jpeg)
+
+
+
+### Use the Projects Methodology
+
+The [documentation](https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio-projects)
+suggests it and I'm going to ***strongly*** recommend
+using "projects".  Even if you think your work will be so simple that
+it won't need categorization I still recommend it!  It's a place to organize
+and just as importantly it will let RStudio help you be more efficient!
+
+Let's create a new project with `File -> New Project`
+
+![Screenshot RStudio new project](hints_images/file_new_project.png)
+
+The new project wizard will open...
+
+![Screenshot showing project wizard](hints_images/type_of_projects.png)
+Choose the first option... `New Directory` and you should see a screen
+similar to this...
+
+![Screenshot showing project wizard](hints_images/project_details.png)
+
+
+Give your new project a meaningful name, even if it is a bit silly like this example.
+
+::: {.callout-important}
+`R` and therefore `RStudio` are case sensitive. Also try to use spaces
+and special characters sparingly.  I strongly recommend using underscores
+to separate words.
+:::
+
+***Decision Time*** I encourage you to store all your R projects in one
+place.  In my case regardless of OS I always put a folder on the Desktop
+and label it.  You can use the browse button to do that now.
+
+Windows and download it.
+**Please make sure you remember where** the downloaded installer is...
+
+![Screenshot showing CRAN download version](img/r_download_version.png)
+
+### Start the installer
+
+Start the installation process by double clicking on the downloaded
+file.  You are likely to get messages about allowing the software
+access.
+
+The `R` installer comes with default settings that are quite rational
+but we're going to make a few key tweaks during the process.
+
+![Screenshot showing Installer](img/r_install_destination.png)
+
+::: {.callout-important}
+You may be tempted to install `R` on a network or virtual drive like 
+`OneDrive`. I **strongly** discourage you from installing anywhere other 
+than your local C: drive or other OS equivalent!
+:::
+
+### Key installer options
+
+As you install it (takes a few minutes) I recommend you ***NOT*** 
+create a desktop shortcut nor a start folder
+for `R` itself because you are very 
+unlikely to use it outside `RStudio`.
+
+![Screenshot showing options](img/r_install_shortcuts.png)
+
+![Screenshot showing options](img/r_install_start_folder.png)
+
+At the end of the installation process you should see the final
+message to finish.  Please don't be tempted to open it, run it,
+or otherwise interact with it yet.  One more step first please.
+
+## Install RStudio{#install-rstudio}
+
+Download RStudio Desktop. Already have RStudio? **Hold on: This is a
+great time to upgrade to the latest version.** Download it here:
+<https://posit.co/download/rstudio-desktop/> you can check
+version numbers with "About RStudio".  If you have a recent
+version of `R` there is almost zero risk in updating `RStudio`.
+
+Unless you are running `RStudio` in production for multiple
+users I recommend you upgrade to the latest version.
+
+As with the `R` download make sure you remember where the installer
+is located.
+
+![Screenshot showing RStudio download](img/rstudio_download_cropped.png)
+
+### Start the installer
+
+Start the installation process by double clicking on the downloaded
+file.  You are likely to get messages about allowing the software
+access.
+
+The `RStudio` installer comes with default settings that are quite rational
+but we're going to make a few key tweaks during the process.
+
+![Screenshot showing Installer](img/rstudio_installer.png)
+
+### Key installer options
+
+As you install it (takes a few minutes) I recommend you ***DO*** 
+create a desktop shortcut and a start folder
+for `RStudio` itself because it's a convenience.
+
+![Screenshot showing options](img/rstudio_folder.png)
+
+After you get familiar with the concept of [`projects`](https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio-projects)
+it may
+not be your preferred method but it is handy to have it where
+you can easily find it.
+
+## Are We There Yet?{#install-pause}
+
+No. But we are at a point where we can pause and see if what we have
+so far actually works!
+
+Try starting `RStudio`.  Not `R` (See @tip-nomenclature for an 
+explanation on what the difference is).  If you've been following
+along I tried hard to hide the `R` icon so you don't accidentally
+start that when you mean `RStudio`.
+
+You will probably encounter this screen, take the default...
+
+![Screenshot showing which R prompt](img/rstudio_prompt.png)
+
+`Posit` maintains [extensive doco on the IDE here](https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio)
+It should look roughly like the following:
+
+![Screenshot showing RStudio panes](img/rstudio_windows.png)
+
+In the console window (the large left "pane") type in or paste
+(See @tip-copypaste for more about cut and paste) in the following
+`sqrt(1:100) * 2`
+
+::: {.callout-important}
+`R` and therefore `RStudio` are case sensitive. If you're used
+to only MS Windows that may throw you for awhile!  But `sqrt(1:100) * 2`
+is different than `Sqrt(1:100) * 2` the later with the capital "S"
+will earn you the message "`Error in Sqrt(1:100) : could not find function "Sqrt"`"
+:::
+
+```{r}
+  sqrt(1:100) * 2
+```
+
+***Eureka!*** it works!  I know, you could take the square root of
+the integers from 1 to 100 and multiply by 2 on your phone but we're
+through the hardest parts!
+
+Exit `RStudio` and let's proceed...
+
+## Install the Quarto Command Line Interface{#install-quarto-cli}
+
+Install the `Quarto Command Line Interface`. **Hold on: Doesn't
+RStudio already have Quarto?** Yes, but trust me, grab the latest, it
+will give you even more super powers to make reports and documents.
+
+[Download it here](https://quarto.org/docs/get-started/) 
+
+![Screenshot showing Quarto CLI download](img/download_quarto_cli.png)
+**Please make sure you remember where** the downloaded installer is...
+
+### Start the installer
+
+Start the installation process by double clicking on the downloaded
+file.  You are likely to get messages about allowing the software
+access.
+
+The `RStudio` installer comes with default settings that are quite rational
+but we're going to make a few key tweaks during the process.
+
+![Screenshot showing Installer](img/install_quarto.png)
+
+after the usual wait time you should be all set, we'll
+check on it in a bit.
+
+## Install a better package manager:
+
+Which sort of begs the question, *"What's a package and why do
+I need something better to manage them?"*  The closest analogy
+is for commercial products like `SAS` or `SPSS` or even `Excel`
+which often offer a base edition and then other modules, or add-ins,
+sometimes for free, sometimes at additional cost.  `Python` is
+also extensible in this manner.
+
+You now have base `R` and `RStudio` installed (yes `RStudio`
+has add-ins too.), for many users that is more than enough for
+just about any statistical or data science usage.  As a matter of
+fact, there are heated debates about why novices need to master base
+before messing with additional packages.  Bearing in my mind my 
+earlier note about this being an opinionated set of instructions
+we're going in the opposite direction, installing some crucial
+packages and eschewing as much use of base `R` as we can.
+
+So we're going to use one base `R` command to install `pak` and then use `pak` 
+for all future package installation. In the bottom right `RStudio` pane find and click on the 
+"Packages" Tab, then click on the install tab...
+
+Most of the info is pre-filled and correct just type in "pak" as shown...
+
+![Screenshot showing RStudio packages tab](img/pak_install.png)
+
+After a few seconds (given a decent internet connection) this 
+will start to appear in the bottom left window...
+
+![Screenshot showing pak progress](img/rstudio_post_pak.png)
+
+**Again please feel free to ignore the warning message about `Rtools` 
+required to build packages.  At this point we're going to stick to
+pre-built packages, much as we did for pre-built binaries**
+
+In general, it is usually, safe to ignore "warnings"
+which are different than "errors", more on that another day...
+
+## Install the Tidyverse
+
+Whew! Almost there! One last step until we have you up and ready.
+
+There are thousands and thousands of packages available for `R`
+most on `CRAN`, some on other platforms like `GitHub` or `Bioconductor`,
+you can even make your own package and share it as a file.
+
+We're going to install about 100 packages known as the `Tidyverse`.
+The [homepage is here](https://www.tidyverse.org/).
+
+**But first an important distinction!**  In `R` there is a 
+distinction between installing a package and making it available
+to "use", every package you "install" is theoretically available
+for use, but to actually make use of an entire package and everything
+in it you type `library(pak)`. There are ways to pick and choose
+which pieces of which packages you use, but for now let's keep it
+simple.
+
+What happens next depends on the package, but in the case of
+`pak` it will simply return to the command prompt after an
+almost imperceptible delay.
+
+But the next step is `pkg_install("tidyverse")`
+
+```{r, eval = FALSE}
+library(pak)
+pkg_install("tidyverse")
+```
+
+This step will produce a very verbose output, as it first
+figures out what packages are required, what other packages are needed 
+then downloads and installs all of them.
+
+Here's a sample of the screen about 80% of the way through:
+
+![Screenshot showing pak progress](img/tidyverse_install.png)
+
+## The Final Test {#sec-final}
+
+Alright, drumroll please...
+
+Let's make sure all that worked and we're in good shape.
+
+Happily this is much simpler than getting it all installed.
+
+As I mentioned above let's make all the pieces of the
+`tidyverse` available with the `library` command.  Then let's make
+a good looking plot with one of those components known as `ggplot2`.
+
+::: {.callout-note}
+I can't recommend `ggplot2` enough.  Back in the early days of the
+`Tidyverse` it was one of the main attractions that beckoned people
+to install `tidyverse` components
+:::
+
+`R` has a number of built in `datasets`, let's use the one named `mpg` that is part of `ggplot2`
+to compare the highway mpg of various 4 cylinder cars. To learn more about
+about the built-in datasets type `library(help = "datasets")` in the console.
+
+(Remember @tip-copypaste rather than doing all the typing yourself)
+
+```{r, eval = TRUE}
+library(tidyverse)
+mpg %>% 
+  filter(cyl == 4) %>% 
+  ggplot(aes(x = displ, y = hwy)) + 
+    geom_point(mapping = aes(colour = class)) +
+    geom_smooth(colour = "black", 
+                method = "lm", 
+                formula = "y ~ x") +
+    xlab("Engine displacement, in litres") +
+    ylab("Highway MPG") +
+    ggtitle("Highway miles per gallon 4 cylinder cars") +
+    theme_bw()
+
+```
+
+Voila!  Over in the bottom right pane of `RStudio` is a tab labelled
+"Plots" and that's where you should see the output.
+
+Please note that the example is pretty trivial I mean yeah the larger
+the engine in liters the less the gas mileage but the example is very
+illustrative of `Tidyverse` consistency of grammar and syntax and workflow.
+
+We took the `mpg` dataset and using `%>%` we "sent" (often referred to
+as piping and keyboard shortcut `CTRL SHIFT M`) it to further
+steps.  We used `filter(cyl == 4)` to chose only the rows of data
+for 4 cylinder cars. We took that subset of data and send if off
+to `ggplot2` with `ggplot(aes(x = displ, y = hwy))` put the 
+`displ` variable on the x axis and `hwy` on the y axis.  The
+code `geom_point(mapping = aes(colour = class)) +` says add a layer
+to the plot (hence the plus sign) that shows the individual data
+points, and colors them according to `class`.  The `geom_smooth()` 
+is a bit of magic that says compute the linear model that predicts
+`hwy` using `displ` (i.e. linear regression using "least squares"), 
+draw the line in the color "black" and plot the confidence interval
+for that line in gray. The rest is just changing the labels, the title,
+and the overall theme.
+
+## Daily Usage {#sec-usage}
+
+***Congratulations*** You're all set to use RStudio anytime you need
+it.
+
+When we installed RStudio I mentioned the concept of
+[`projects`](https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio-projects)
+now is a good time to review that, decide where you want your
+projects to "live" and start making use of them.
+
+## Starting Over {#sec-startover}
+
+What happens if you have an existing installation of `R` or `RStudio`?
+
+**Get current, people.** You don't want to adopt new things on day one.
+But at some point, running old versions of software adds unnecessary
+difficulty.
+
+Is your R version "old"? R had a *major* version change in April 2024,
+with the release of 4.4.0. It is a good idea to be on the current major
+version, meaning 4 "dot" something at this point, especially if you want
+to get the most out of your work.
+
+Each major version is followed by about a year of smaller releases
+(minor and patch releases). You can be more relaxed about upgrading
+minor versions, but you still want to stay reasonably current. As the
+4.something series unfolds, I advise that you never fall more than 1
+minor version behind.
+
+It's probably OK if you are still on 4.3.2 (I am), but eventually you will
+start to suffer. In particular, you can no longer install pre-built
+binary add-on packages from CRAN.
+
+Here's the simple version!  But it's really about how you can use `RStudio`
+and `Quarto` to make a flowchart!
+
+Is your RStudio "old"? Unless you have a specific reason to prefer otherwise,
+always install the latest updates. RStudio is fairly conservative with
+official releases, so the Preview version is used by many people for
+their daily work. This allows you to enjoy the latest goodies much
+sooner. The Preview version updates much more frequently (and in smaller
+increments) than the released version. This is something you might
+update once every month or so.
+
+## Helpful Tips
+
+::: {#tip-nomenclature .callout-tip}
+### What's the difference between `R` and `RStudio`
+
+`R` refers to programming language like `Python` or `Java`, or ...
+
+`RStudio` is an integrated development environment. As the name
+implies it started as uniquely aimed for `R` but has now expanded
+to include other languages like `Python`.
+
+To make things simpler I recommend you don't worry about which
+name you use most of the time, but always use RStudio as your
+gateway to all things R.  More on that in a bit.
+
+:::
+
+::: {#tip-copypaste .callout-tip}
+### You can cut and paste
+
+These instructions were written entirely in `R` and `RStudio`
+and then "rendered" into an `html` document (`pdf` and `word`
+are also possible) using `Quarto`. Besides the professional
+looking output one of the true advantages is that you
+can easily cut and paste from the html into RStudio to
+"try" the examples.
+
+Trying to cut and paste from `MS Word` is usually disastrous,
+way too many proprietary formatting glitches.
+
+:::
+
+fini
+

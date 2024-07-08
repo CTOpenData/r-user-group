@@ -40,6 +40,6 @@ addresses_cleaned <- addresses %>%
     Zip_clean,
     County, 
     State
-    )
+  )
 
 
