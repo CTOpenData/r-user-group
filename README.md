@@ -25,11 +25,31 @@ strive to keep folder conventions the same where it makes
 sense to do so.  Scripts will be at the root of a topic folder
 and relevant data and outputs will go in their respective subfolders `data` and `output`.
 Some topics may benefit from additional subfolders like the `geos` folder which
-will contain a subfolder `shapefiles` that will house Connecticut shapefiles for
-users with limited API or internet access.
+will contain a subfolder `shapefiles` that will help users with limited API/internet access.
+
+### learning_r
+The `learning_r` folder is a great place for users new to R and R Studio to go 
+and familiarize themselves with the language and its most popular IDE.
+
+For installation help users' first stop should be `learning_r/output/install_intro_v3.html`.
 ### geos
 The `geos` folder contains scripts, data, outputs and shapefiles all related
 to the typical work surrounding Geographic Information Systems (GIS) including 
 but not limited to mapping, address cleaning and accessing various state 
 and federal APIs.
+
+### slide_decks
+
+The `slide_decks` folder houses the slide decks of presentations that group
+members have presented.
+
+
+## TODO
+
+* joining the group
+* license?
+* credits
+* how to contribute section
+* repo conventions
+* fun badges?
 
