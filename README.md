@@ -5,7 +5,10 @@
   - [Project Description](#project-description)
   - [Getting Started](#getting-started)
   - [Contents Overview](#contents-overview)
+    - [learning_r](#learningr)
     - [geos](#geos)
+    - [slide_decks](#slidedecks)
+  - [TODO](#todo)
 <!--toc:end-->
 
 ## Project Description
