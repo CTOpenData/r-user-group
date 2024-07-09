@@ -4,6 +4,8 @@
 - [r-user-group](#r-user-group)
   - [Project Description](#project-description)
   - [Getting Started](#getting-started)
+  - [Contents Overview](#contents-overview)
+    - [geos](#geos)
 <!--toc:end-->
 
 ## Project Description
@@ -17,6 +19,14 @@ a collection of Connecticut-specific use-cases,
 Users are encouraged to peruse the topics/folders that are most applicable 
 to their interests or their work for the state.  
 
+## Contents Overview
+Despite the different topic areas in the repository we will
+strive to keep folder conventions the same where it makes 
+sense to do so.  Scripts will be at the root of a topic folder
+and relevant data and outputs will go in their respective subfolders `data` and `output`.
+Some topics may benefit from additional subfolders like the `geos` folder which
+will contain a subfolder `shapefiles` that will house Connecticut shapefiles for
+users with limited API or internet access.
 ### geos
 The `geos` folder contains scripts, data, outputs and shapefiles all related
 to the typical work surrounding Geographic Information Systems (GIS) including 
