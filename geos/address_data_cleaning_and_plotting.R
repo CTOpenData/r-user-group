@@ -13,11 +13,15 @@
 library(tidyverse) # instead of reading in each of these packages separately
 
 # Load the address data, which is hosted on Github, and save it as a tibble/dataframe called addresses
-addresses <- read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
+addresses <-
+  # TODO fix the permalink when this is merged
+  # read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
+  read_csv("data/demo_address_data.csv")
 
 # Standardize the town names
 # Bring in the ctnamecleaner file from Github
-ct_name_cleaner <- read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
+ct_name_cleaner <-
+  read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
 
 # Someone in the chat, half in jest, suggested they had more names
 # they'd like to clean.  The "cleanest" way to do so is to modify
@@ -29,8 +33,8 @@ ct_name_cleaner <-
   add_row(name = "NB", realname = "NEW BRITAIN") %>%
   arrange(name)
 
-# Join the addresses dataframe with the ct_name_cleaner dataframe and bring in realname column
-# & clean the zipcodes
+# Join the addresses dataframe with the ct_name_cleaner dataframe
+# and bring in realname column & clean the zipcodes
 addresses_cleaned <-
   addresses %>%
   # Make town names uppercase using the mutate function
@@ -152,17 +156,19 @@ m <-
     data = adds_to_plot,
     label = adds_to_plot$plot_address,
     popup = adds_to_plot$special_label
-  ) %>% 
+  ) %>%
   leaflet::addPolygons(
     data = town_esri_data,
     fill = NA,
-    color = "red", 
-    weight = 2) %>% 
+    color = "red",
+    weight = 2
+  ) %>%
   leaflet::addPolygons(
     data = county_esri_data,
     fill = NA,
-    color = "blue", 
-    weight = 2)
+    color = "blue",
+    weight = 2
+  )
 
 
 m
