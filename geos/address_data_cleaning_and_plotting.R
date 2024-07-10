@@ -11,12 +11,15 @@
 # Very opinionated but I always suggest loading the entire tidyverse first
 # the tidyverse is a collection of packages for data science
 library(tidyverse) # instead of reading in each of these packages separately
+library(here) # here is a package for easy file referencing
 
 # Load the address data, which is hosted on Github, and save it as a tibble/dataframe called addresses
 addresses <-
   # TODO fix the permalink when this is merged
   # read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
-  read_csv("data/demo_address_data.csv")
+  read_csv(
+    here("geos/data/demo_address_data.csv")
+  )
 
 # Standardize the town names
 # Bring in the ctnamecleaner file from Github

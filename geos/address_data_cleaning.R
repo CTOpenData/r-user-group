@@ -9,12 +9,15 @@ library(dplyr) # dplyr is a package for dataframe manipulation
 library(stringr) # stringr is a package to manipulate strings
 # library (tidyverse) # instead of reading in each of these packages separately, you can also load the tidyverse
 # tidyverse is a collection of packages for data science
+library(here) # here is a package for easy file referencing
 
 # Load the address data, which is hosted on Github, and save it as a dataframe called addresses
 addresses <-
   # TODO fix the permalink when this is merged
   # read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
-  read_csv("data/demo_address_data.csv")
+  read_csv(
+    here("geos/data/demo_address_data.csv")
+  )
 #
 # Standardize the town names
 # Bring in the ctnamecleaner file from Github
