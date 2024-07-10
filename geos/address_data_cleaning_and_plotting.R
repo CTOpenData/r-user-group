@@ -72,10 +72,10 @@ addresses_cleaned <-
 
 
 ct_towns <-
-  here(sf::st_read("geos/shapefiles/cb_2017_09_cousub_500k.shp"))
+  sf::st_read(here("geos/shapefiles/cb_2017_09_cousub_500k.shp"))
 
 ct_counties <-
-  here(sf::st_read("geos/shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp"))
+  sf::st_read(here("geos/shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp"))
 
 addresses_cleaned %>%
   mutate(
