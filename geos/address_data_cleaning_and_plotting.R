@@ -70,8 +70,12 @@ addresses_cleaned <-
 # pak::pkg_install("sf")
 # pak::pkg_install("ggrepel")
 
-ct_towns <- sf::st_read("shapefiles/cb_2017_09_cousub_500k.shp")
-ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp")
+
+ct_towns <-
+  here(sf::st_read("geos/shapefiles/cb_2017_09_cousub_500k.shp"))
+
+ct_counties <-
+  here(sf::st_read("geos/shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp"))
 
 addresses_cleaned %>%
   mutate(
