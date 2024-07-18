@@ -11,13 +11,20 @@
 # Very opinionated but I always suggest loading the entire tidyverse first
 # the tidyverse is a collection of packages for data science
 library(tidyverse) # instead of reading in each of these packages separately
+library(here) # here is a package for easy file referencing
 
 # Load the address data, which is hosted on Github, and save it as a tibble/dataframe called addresses
-addresses <- read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
+addresses <-
+  # TODO fix the permalink when this is merged
+  # read_csv("https://raw.githubusercontent.com/CTOpenData/r-user-group/main/demo_address_data.csv")
+  read_csv(
+    here("geos/data/demo_address_data.csv")
+  )
 
 # Standardize the town names
 # Bring in the ctnamecleaner file from Github
-ct_name_cleaner <- read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
+ct_name_cleaner <-
+  read_csv("https://raw.githubusercontent.com/CT-Data-Collaborative/ctnamecleaner/master/ctnamecleaner.csv")
 
 # Someone in the chat, half in jest, suggested they had more names
 # they'd like to clean.  The "cleanest" way to do so is to modify
@@ -29,8 +36,8 @@ ct_name_cleaner <-
   add_row(name = "NB", realname = "NEW BRITAIN") %>%
   arrange(name)
 
-# Join the addresses dataframe with the ct_name_cleaner dataframe and bring in realname column
-# & clean the zipcodes
+# Join the addresses dataframe with the ct_name_cleaner dataframe
+# and bring in realname column & clean the zipcodes
 addresses_cleaned <-
   addresses %>%
   # Make town names uppercase using the mutate function
@@ -63,8 +70,12 @@ addresses_cleaned <-
 # pak::pkg_install("sf")
 # pak::pkg_install("ggrepel")
 
-ct_towns <- sf::st_read("shapefiles/cb_2017_09_cousub_500k.shp")
-ct_counties <- sf::st_read("shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp")
+
+ct_towns <-
+  sf::st_read(here("geos/shapefiles/cb_2017_09_cousub_500k.shp"))
+
+ct_counties <-
+  sf::st_read(here("geos/shapefiles/countyct_37800_0000_1990_s100_CENSUS_1_shp_wgs84.shp"))
 
 addresses_cleaned %>%
   mutate(
@@ -152,17 +163,19 @@ m <-
     data = adds_to_plot,
     label = adds_to_plot$plot_address,
     popup = adds_to_plot$special_label
-  ) %>% 
+  ) %>%
   leaflet::addPolygons(
     data = town_esri_data,
     fill = NA,
-    color = "red", 
-    weight = 2) %>% 
+    color = "red",
+    weight = 2
+  ) %>%
   leaflet::addPolygons(
     data = county_esri_data,
     fill = NA,
-    color = "blue", 
-    weight = 2)
+    color = "blue",
+    weight = 2
+  )
 
 
 m
