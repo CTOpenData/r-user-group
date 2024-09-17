@@ -1,12 +1,44 @@
 ---
-title: "october_demo"
+title: "CT R User Group October Demonstration"
 author: "Chuck Powell"
-format: html
+date: last-modified
+date-format: "MM-DD-YYYY"
+description: "Using Quarto within RStudio"
+format:
+  html:
+    title-block-banner: "#01548B"
+    toc: true
+    embed-resources: true
+    link-external-newwindow: true
+    toc-location: left
+    other-links:
+      - text: CRAN
+        href: https://cloud.r-project.org/
+      - text: RStudio (via the *POSIT* website)
+        href: https://posit.co/download/rstudio-desktop/
+      - text: Quarto Command Line Interface
+        href: https://quarto.org/docs/get-started/
+      - text: RStudio User Guide
+        href: https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio
+      - text: pak R package manager
+        href: https://pak.r-lib.org/
+      - text: The Tidyverse Homepage
+        href: https://www.tidyverse.org/
+css: styles.css
+editor: source
+
 ---
 
 ## Quarto
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.  If you are familiar with RMarkdown documents in
+earlier versions of R and RStudio you can think of Quarto as the "next generation" tool.
+
+Most "modern" versions of RStudio come with a basic functioning version of Quarto installed.
+But to get all the lastest features and functionality I recommend you install the 
+"Quarto Command Line Interface" see the hyperlink in the sidebar.
+
+
 
 ## Running Code
 
