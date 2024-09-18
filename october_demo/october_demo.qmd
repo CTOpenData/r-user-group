@@ -38,6 +38,18 @@ Most "modern" versions of RStudio come with a basic functioning version of Quart
 But to get all the lastest features and functionality I recommend you install the 
 "Quarto Command Line Interface" see the hyperlink in the sidebar.
 
+### Why you might want to use Quarto?
+
+You have data, and you have tools like `R` to analyze it but you want to communicate or
+"publish" your results and findings in a reproducible, professional manner in a variety
+of common formats (HTML, PDF, Word, etc.) to share with others.
+
+### How difficult is Quarto to learn?
+
+I like to describe it as simple to learn (the basics), after all it's built-in and
+comes with starter templates that make it easy to get started.  But it can be complex
+and take some time to "master" if you're insistent on complex formatting.
+
 
 
 ## Running Code
