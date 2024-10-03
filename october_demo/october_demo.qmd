@@ -24,6 +24,8 @@ format:
         href: https://pak.r-lib.org/
       - text: The Tidyverse Homepage
         href: https://www.tidyverse.org/
+      - text: Quarto User Guide
+        href: https://quarto.org/docs/guide/
 css: styles.css
 editor: source
 
