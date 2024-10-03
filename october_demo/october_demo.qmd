@@ -1,8 +1,8 @@
 ---
 title: "CT R User Group October Demonstration"
 author: "Chuck Powell"
-date: last-modified
-date-format: "MM-DD-YYYY"
+date: today
+date-format: "long"
 description: "Using Quarto within RStudio"
 format:
   html:
