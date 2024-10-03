@@ -6,7 +6,7 @@ date-format: "long"
 description: "Using Quarto within RStudio"
 format:
   html:
-    title-block-banner: "#01548B"
+    title-block-banner: "#3171e7"
     toc: true
     embed-resources: true
     link-external-newwindow: true
