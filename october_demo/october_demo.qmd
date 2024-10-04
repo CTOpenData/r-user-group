@@ -12,20 +12,20 @@ format:
     link-external-newwindow: true
     toc-location: left
     other-links:
-      - text: CRAN
-        href: https://cloud.r-project.org/
-      - text: RStudio (via the *POSIT* website)
-        href: https://posit.co/download/rstudio-desktop/
+      - text: Quarto User Guide
+        href: https://quarto.org/docs/guide/
       - text: Quarto Command Line Interface
         href: https://quarto.org/docs/get-started/
       - text: RStudio User Guide
         href: https://docs.posit.co/ide/user/ide/get-started/#hello-rstudio
+      - text: CRAN
+        href: https://cloud.r-project.org/
+      - text: RStudio (via the *POSIT* website)
+        href: https://posit.co/download/rstudio-desktop/
       - text: pak R package manager
         href: https://pak.r-lib.org/
       - text: The Tidyverse Homepage
         href: https://www.tidyverse.org/
-      - text: Quarto User Guide
-        href: https://quarto.org/docs/guide/
 css: styles.css
 editor: source
 
