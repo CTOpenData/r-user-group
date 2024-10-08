@@ -52,7 +52,15 @@ I like to describe it as simple to learn (the basics), after all it's built-in a
 comes with starter templates that make it easy to get started.  But it can be complex
 and take some time to "master" if you're insistent on complex formatting.
 
+### How do I get started?
 
+In `RStudio` try the following steps:
+
+1.  File -> New File -> Quarto Document
+2.  Fill in a Title (leave HTML checked for now)
+3.  Create
+
+I'll give you a live demo...
 
 ## Running Code
 
@@ -70,3 +78,9 @@ You can add options to executable code like this
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+sessionInfo()
+
+```
+
