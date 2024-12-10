@@ -1,0 +1,161 @@
+---
+title: "R Packages: There and Back Again"
+author: "Alexander Senetcky, MPH, Data Scientist"
+format: 
+  revealjs:
+    theme: dark
+    embed-resources: true
+editor: visual
+---
+
+# `strata` accepted into the CRAN
+
+------------------------------------------------------------------------
+
+I learned some things along the way that I want to share.
+
+-   Not a nitty gritty look into package building
+
+-   High level overview of lessons learned
+
+------------------------------------------------------------------------
+
+This presentation isn't about `strata` but if you want to check it out, please do at: <https://asenetcky.github.io/strata/>
+
+::: notes
+I'm not here to promote strata, and we won't be covering it in depth. I will say that it is a package that helps teams withou fancy automation tooling to take the code they *already* have and place it in a framework that is easy to automate using the tools they *already* have on their computer.
+:::
+
+# What I wish I had known
+
+## It *IS* possible!
+
+-   There are excellent *free* resources out there
+
+-   Almost everything you need to know is in [R Packages 2nd Edition](https://r-pkgs.org/)
+
+::: notes
+I just didn't hear this enough, but it is possible and if the pros I mention later on in the presentation are critical to your projects, then I strongly encourage you to give package building a try.
+:::
+
+## Package Scope
+
+-   The R package can just be a small family of functions, it does **not** need to be the next `tidyverse`
+
+-   The R package just needs to be useful to *you and your team*
+
+-   It does *not* need to go up to the CRAN
+
+## I wish I had started years ago
+
+::: notes
+If I had started honing this skill years ago, I would saved myself alot of headaches down the road.
+:::
+
+# What's gained by making an R package?
+
+## **Reproducibility**
+
+-   Building a package bundles up all your code *AND* your dependencies
+
+    -   No more endless `source()` calls to helper scripts and functions
+
+-   Users can enforce strict versioning of dependencies
+
+------------------------------------------------------------------------
+
+-   R package build tools allow users to check, and ensure that the package it will run on just about any machine that is required
+
+-   Building a package forces users to write out that documentation we so often skip over
+
+    -   Makes it easier for others to use and *understand* your code
+
+    -   Makes you a better teammate
+
+## **Portability**
+
+Building a package means that the code and documentation can be easily shared with others publicly and privately.
+
+-   No more emailing code around
+
+-   No more asking permission to access share drives or folders
+
+-   No more manually cutting and pasting code all over the place
+
+## **Clarity and Organization**
+
+-   The package structure forces you to organize your code in a way that is easy to understand and use
+
+-   The documentation lives alongside the code, making it easier to understand what the code does
+
+-   Build tools allow pieces of documentation to be used over and over again
+
+    -   Update once, and it updates everywhere
+
+    -   Consistent language throughout
+
+# Sharing R Packages
+
+------------------------------------------------------------------------
+
+Getting an R Package requires alot of work and overheard that might not be worth it for a small project. However, users can still share their project with others it does not need to be on the CRAN.
+
+## Distributing your Package
+
+Sharing your R package is easy to do with `git` and a repository hosting service.
+
+-   [Github](https://github.com/)
+
+-   [Gitlab](https://about.gitlab.com/)
+
+-   [Azure Devops](https://azure.microsoft.com/en-us/products/devops)
+
+-   [Bitbucket](https://bitbucket.org/)
+
+## Sharing Publicly
+
+You may remember Chuck showing off the `pak` package in a previous meeting. Once an R package is hosted in a remote repository, `pak` is just about all users need to install the package.
+
+-   `pak::pak("<GITHUB USERNAME>/<PACKAGE NAME>")`
+
+-   install the development version of `strata`:
+
+    -   `pak::pak("asenetcky/strata")`
+
+## Sharing Privately
+
+-   The `remotes` package is a great way to install packages from a private repository.
+
+-   For example we have a private CT DPH `odp` R package for internal use only that is hosted in our Azure Devops Project.
+
+-   Installing that would look something like:
+
+    -   `remotes::install_git("<REPO CLONE URL>", git = "external)`
+
+# One last note on Reproducibility
+
+## What we don't have
+
+-   Most of us *do not* have access to the fanciest tools and services
+
+-   Most of us *are not* allowed to spool up a docker image, or server for development
+
+## What we do have
+
+-   Most of us have access to R
+
+-   Most of us have access to git (whether we realize it or not)
+
+## Pulling it all together
+
+If users combine:
+
+-   R
+
+-   git
+
+-   Your own R Package
+
+-   `renv` package
+
+Users *will* have a powerful combination of tools where reproducibility is paramount.
