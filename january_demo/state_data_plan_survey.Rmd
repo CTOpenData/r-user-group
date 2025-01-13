@@ -1,0 +1,410 @@
+---
+title: "External Data Users Survey to Inform the 2025-2026 CT State Data Plan"
+output:
+  word_document:
+    reference_docx: state_data_plan_survey_template.docx
+---
+
+This document highlights findings from the survey of external data users to inform the 2025-2026 State Data Plan. The survey was conducted using Microsoft Forms starting on October 17, 2024. As of December 11, 2024, 105 responses have been submitted.
+
+```{r setup, include=FALSE, warning=FALSE, echo=FALSE}
+# Load necessary libraries
+library(tidyverse)
+library(knitr)
+library(scales)
+library(stringr)
+library(extrafont)  # For custom fonts
+# font_import()
+
+# Read and clean the survey data
+setwd("C:/R")
+survey_data <- read_csv("survey_results.csv", locale=locale(encoding="latin1")) %>%
+  mutate(`Question: How do you utilize data from the State of Connecticut? (Select no more than 4)` = str_replace_all(
+    `Question: How do you utilize data from the State of Connecticut? (Select no more than 4)`,
+    c("I dont. ;" = "I don’t currently use data from the State of Connecticut	",
+      "Do not utilize data from CT;" = "I don’t currently use data from the State of Connecticut	",
+      "\\s+$" = ""  # Remove trailing spaces
+    )
+  ))
+
+```
+
+```{r settings, include=FALSE, echo=FALSE}
+# Define the main color and theme settings
+main_color <- "#3371E7"
+label_font_size <- 10
+label_color <- "black"
+
+# Custom theme for plots
+custom_theme <- theme_minimal(base_family = "Poppins") +
+  theme(axis.title.x = element_blank(),  # Remove x-axis title
+        axis.title.y = element_blank(),  # Remove y-axis title
+        axis.text.x = element_blank(),   # Remove x-axis labels
+        axis.text.y = element_text(family = "Poppins", size = label_font_size, color = label_color),  # Y-axis text
+        axis.line.y = element_line(size = .2, color = "gray"),
+        panel.grid = element_blank(),  # Remove gridlines
+        plot.title = element_text(family = "Poppins", face = "bold", size = 14, hjust = 0),  # Align title left
+        plot.subtitle = element_text(family = "Poppins", size = 12, hjust = 0),  # Align subtitle left
+        plot.title.position = "plot")  
+```
+
+```{r question 1, dpi=600, fig.width=7, echo=FALSE}
+# 1. Analysis for "What type of industry are you in?"
+
+# Clean up industry column and create count of responses by industry
+industry_summary <- survey_data %>%
+  rename(industry = `Question: What type of industry are you in? (Select one)`) %>%
+  mutate(industry = case_when(industry == "Author's Research" ~ "Other",
+         industry == "Consulting" ~ "Other",
+         industry == "Media" ~ "Other",
+         industry == "personal" ~ "Other",
+         industry == "RTM and Dem Town Committee member" ~ "Government",
+         TRUE ~ industry)) %>%
+  count(industry) %>%
+  arrange(desc(n)) 
+
+# Wrap title text
+wrapped_title <- str_wrap("Most survey respondents were in the public and non-profit sectors", width = 75)
+
+# Plot for industry
+industry_plot <- ggplot(industry_summary, aes(x = reorder(industry, n), y = n)) +
+  geom_bar(stat = "identity", fill = main_color) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # Add space on the upper limit
+  geom_text(aes(label = n), hjust = -.5, size = 4, family = "Poppins") +  # Add direct labels
+  coord_flip() +
+  labs(title = wrapped_title,
+       subtitle = "Question: What type of industry are you in? (Select one)") +
+  custom_theme 
+
+industry_plot
+
+```
+
+-   Most survey respondents worked in government or the non-profit sector.
+
+```{r question 2, dpi=600, fig.width=7, echo=FALSE}
+# 2. Analysis for "How would you describe your expertise with utilizing and analyzing data?"
+
+# Clean up expertise data and create counts of responses by expertise 
+expertise_summary <- survey_data %>%
+  rename(experience = `Question: How would you describe your expertise with utilizing and analyzing data? (Select one)`) %>%
+  count(experience) %>%
+  mutate(experience = factor(experience, levels =c("Novice / Beginner", "Advanced Beginner", "Proficient / Experienced", "Expert"))) %>%
+  arrange(experience)
+
+# Wrap title text
+wrapped_title <- str_wrap("Most survey respondents said they were proficient/experienced working with data", width = 65)
+subtitle <- str_wrap("Question: How would you describe your expertise with utilizing and analyzing data? (Select one)", width = 70)
+
+# Plot for expertise
+expertise_plot <- ggplot(expertise_summary, aes(x = experience, y = n)) +
+  geom_bar(stat = "identity", fill = main_color) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # Add space on the upper limit
+  geom_text(aes(label = n), hjust = -0.2, size = 4, family = "Poppins") +  # Add direct labels
+  coord_flip() +
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  custom_theme
+
+expertise_plot
+
+```
+
+-   Most respondents said they were "proficient/experienced" working with data.
+-   22 identified themselves as experts. 8 identified as beginners.
+
+```{r question 3, dpi=600, fig.width=7, fig.height=6, echo=FALSE}
+# 3. Analysis for "Where or how do you obtain data from the State of Connecticut?"
+
+# Create counts of respondents by data source 
+data_sources_summary <- survey_data %>%
+  rename(data_source = `Question: Where or how do you obtain data from the State of Connecticut? (Check all that apply)`) %>%
+  separate_rows(data_source, sep = ";") %>%
+  filter(data_source != "") %>%  # Exclude blank cells
+  count(data_source) %>%
+  arrange(desc(n))
+
+# Wrap title text
+wrapped_title <- str_wrap("Most survey respondents obtain data directly from state websites", width = 70)
+subtitle <- str_wrap("Question: Where or how do you obtain data from the State of Connecticut? (Check all that apply)", width = 70)
+  
+# Plot for data sources
+data_sources_plot <- ggplot(data_sources_summary, aes(x = reorder(data_source, n), y = n)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # Add space on the upper limit
+  geom_bar(stat = "identity", fill = main_color) +
+  geom_text(aes(label = n), hjust = -0.2, size = 4, family = "Poppins") +  # Add direct labels
+  coord_flip() +
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  custom_theme +
+  scale_x_discrete(labels = scales::wrap_format(35))
+
+data_sources_plot
+
+```
+
+-   The majority of respondents said that they access state data directly from state agency websites.
+-   The second most frequent response was finding data through the Open Data Portal.
+-   The least common way of accessing state data was through Freedom of Information Act requests and through P20 WIN.
+
+```{r question 4, dpi=600, fig.width=7, fig.height=6, echo=FALSE}
+# 4. Analysis for "How do you utilize data from the State of Connecticut?"
+
+# Clean up data on utilization of state data and create counts of respondents by type of use
+data_utilization_summary <- survey_data %>%
+  rename(data_use = `Question: How do you utilize data from the State of Connecticut? (Select no more than 4)`) %>%
+  separate_rows(data_use, sep = ";") %>%
+  mutate(data_use = case_when(data_use == "Academic research" ~ "Research",
+         data_use == "Research for clients" ~ "Research",
+         data_use == "I have not yet used state data" ~ "I don’t currently use data from the State of Connecticut",
+         data_use == "Application, informational, reference data, etc." ~ "Other",
+         data_use == "Policy planning, advocacy and accountability" ~ "Other",
+         data_use == "general planning" ~ "Other",
+         data_use == "Content Creator" ~ "Content creator",
+         TRUE ~ data_use)) %>%
+    filter(data_use != "") %>%  # Exclude blank cells
+  count(data_use) %>%
+  arrange(desc(n))
+
+# Wrap title text
+wrapped_title <- str_wrap("Most survey respondents use state data for planning, grant writing, and decision-making", width = 65)
+subtitle <- str_wrap("Question: How do you utilize data from the State of Connecticut? (Select no more than 4)", width = 65)
+
+# Plot for data utilization
+data_utilization_plot <- ggplot(data_utilization_summary, aes(x = reorder(data_use, n), y = n)) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # Add space on the upper limit
+  geom_bar(stat = "identity", fill = main_color) +
+  geom_text(aes(label = n), hjust = -0.2, size = 4, family = "Poppins") +  # Add direct labels
+  coord_flip() +
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  custom_theme +
+  scale_x_discrete(labels = scales::wrap_format(30))
+
+data_utilization_plot
+
+```
+
+-   The most common usage of state data by respondents was for planning and grant-writing.
+-   Almost half of respondents reported linking state data with other datasets.
+
+```{r question 5, dpi=600, fig.width=7, echo=FALSE}
+# 5. Analysis for "How frequently do you utilize data from the State of Connecticut?"
+
+# Create counts of respondents by frequency of data use
+frequency_summary <- survey_data %>%
+  rename(frequency = `Question: How frequently do you utilize data from the State of Connecticut? (Select one)`) %>%
+  count(frequency) %>%
+  mutate(frequency = factor(frequency, levels=c("Daily", "Every two to seven days", "Every week to four weeks", "Less than once every four weeks", "Never"))) %>%
+  arrange(frequency)
+
+# Wrap title text
+wrapped_title <- str_wrap("Most survey respondents use state data less than once every four weeks", width = 65)
+subtitle <- str_wrap("Question: How frequently do you utilize data from the State of Connecticut? (Select one)", width = 65)
+
+# Plot for frequency
+frequency_plot <- ggplot(frequency_summary, aes(x = frequency, y = n)) +
+  geom_bar(stat = "identity", fill = main_color) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +  # Add space on the upper limit
+  geom_text(aes(label = n), hjust = -0.2, size = 4, family = "Poppins") +  # Add direct labels
+  coord_flip() +
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  custom_theme
+
+frequency_plot
+
+```
+
+-   Over half of respondents said they accessed state data at least every four weeks.
+-   Seventeen respondents said they used state data on a daily basis.
+
+```{r, warning=FALSE, dpi=600, fig.width=7, echo=FALSE}
+# 6. Analysis for "How concerned are you for the privacy of the data that the State coordinates and manages? (Select one)"
+
+# Clean up data for questions involving scales
+privacy_security <- survey_data %>%
+  select(13:14) %>%
+  rownames_to_column("ID") %>% 
+  pivot_longer(!ID) %>%
+  group_by(name, value) %>%
+  summarize(n()) %>%
+  rename(count= `n()`) %>% 
+  mutate(name = case_when(grepl("^Question: Data privacy.*", name) ~ "Concern about data privacy",
+                          grepl("^Question: Data security.*", name) ~ "Concern about data security",
+                          TRUE ~ name),
+         percent = count/(sum(count)),
+         label = ifelse(value =="I do not know", NA, percent))
+
+privacy_security$value <- factor(privacy_security$value, levels = c("Very concerned", "Somewhat concerned", "Neither concerned nor unconcerned", "Somewhat unconcerned", "Very unconcerned", "I do not know"))
+
+# Wrap title text
+wrapped_title <- str_wrap("Survey respondents had mixed concerns about data privacy and security", width = 65)
+subtitle <- str_wrap("How concerned are you for the privacy and security of the data that the State coordinates and manages? (Select one)", width = 70)
+
+custom_palette <- c(
+  "I do not know" = "#235BCC",  # Example: Red
+   "Very concerned" = "#E16E20",     # Example: Teal
+   "Somewhat concerned" = "#FDB06F",            # Example: Yellow
+   "Neither concerned nor unconcerned" = "#F5F5F5",           # Example: Orange
+  "Somewhat unconcerned" = "#A0C3FF",              # Example: Green
+  "Very unconcerned" = "#5A8FF0"      # Example: Teal
+)
+
+privacy_security_plot <- ggplot(privacy_security, aes(x = str_wrap(name, width=10), y = percent, fill = value)) +
+  geom_bar(stat = "identity", position = "fill", color="white") +  # Use 'position = "fill"' for proportions
+  scale_y_continuous(labels = scales::percent, expand = expansion(mult = c(0, 0.1))) +   
+  geom_text(aes(label = percent(label, 0.1)), position = position_stack(vjust = 0.5), 
+            size = 3, family = "Poppins", color = "black") + # Add direct labels
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  coord_flip() +
+  custom_theme +
+  scale_fill_manual(values = custom_palette) + # Apply custom colors
+  theme(legend.title=element_blank())+ 
+  theme(
+    plot.subtitle = element_text(margin = margin(b = 55)),  # Add margin below title
+    legend.direction = "horizontal",
+    legend.position = c(-.14, 1), 
+    legend.justification = c(0, 0),  # Align legend's top-left corner to (0, 1)
+    legend.text=element_text(size=8)) +
+    guides(fill = guide_legend(reverse = TRUE))
+
+  privacy_security_plot
+
+```
+
+-   Respondents said they were slightly more concerned about data security than data privacy.
+
+```{r question 6, dpi=600, warning=FALSE, fig.width=7, echo=FALSE}
+# 6. Analysis of Likert scale questions related to data privacy, security, and technology concerns
+
+# Clean up data for questions involving scales
+impact <- survey_data %>%
+  select(15:20) %>%
+  rownames_to_column("ID") %>% 
+  pivot_longer(!ID) %>%
+  group_by(name, value) %>%
+  summarize(n()) %>%
+  rename(count= `n()`) %>%
+  mutate(percent = count/(sum(count)))
+  
+impact$value <- factor(impact$value, levels = c("Very likely", "Somewhat likely", "Neither likely nor unlikely", "Somewhat unlikely", "Very unlikely"))
+
+# Step 1: Calculate total proportion of "Very likely" and "Somewhat likely"
+agg_impact <- impact %>%
+  filter(value %in% c("Very likely", "Somewhat likely")) %>%
+  group_by(name) %>%
+  summarize(agg_percent = sum(percent), .groups = "drop")
+
+# Step 2: Reorder `name` based on aggregated proportions
+impact <- impact %>%
+  left_join(agg_impact, by = "name") %>%
+  mutate(name = fct_reorder(name, agg_percent, .desc = TRUE))
+
+# Wrap title text
+wrapped_title <- str_wrap("Changes in technology and in federal/state law were considered the most likely to impact respondents' use of state data in the next two years", width = 70)
+subtitle <- str_wrap("Question: How likely will each of the following impact your usage of State data in the next two years?", width = 70)
+
+custom_palette <- c(
+   "Very likely" = "#E16E20",     # Example: Teal
+   "Somewhat likely" = "#FDB06F",            # Example: Yellow
+   "Neither likely nor unlikely" = "#F5F5F5",           # Example: Orange
+  "Somewhat unlikely" = "#A0C3FF",              # Example: Green
+  "Very unlikely" = "#5A8FF0"      # Example: Teal
+)
+
+impact_plot <- ggplot(impact, aes(x = fct_reorder(str_wrap(name, width = 25), agg_percent), y = percent, fill = value)) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +  # Use 'position = "fill"' for proportions
+  scale_y_continuous(labels = scales::percent, expand = expansion(mult = c(0, 0.1))) +   
+  geom_text(aes(label = percent(percent, 0.1)), position = position_stack(vjust = 0.5), 
+            size = 3, family = "Poppins", color = "black") + # Add direct labels
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  coord_flip() +
+  custom_theme +
+  scale_fill_manual(values = custom_palette) + # Apply custom colors
+  theme(legend.title=element_blank())+ 
+  theme(
+    plot.subtitle = element_text(margin = margin(b = 30)),  # Add margin below title
+    legend.direction = "horizontal",
+    legend.position = c(-.35, 1), 
+    legend.justification = c(0, 0),  
+    legend.text=element_text(size=8)) +
+    guides(fill = guide_legend(reverse = TRUE))
+
+  impact_plot
+
+```
+
+-   57.2% of respondents said changes in technology would be either somewhat or very likely to impact their use of state data in the next two years.
+-   54.3% of respondents said changes in federal or state law would be either somewhat or very likely to impact their use of state data in the next two years.
+
+```{r question 10, dpi=600, warning=FALSE, fig.width=7, fig.height=8, echo=FALSE}
+#  Analysis of Likert scale questions related to data privacy, security, and technology concerns
+
+# Clean up data for questions involving scales
+barriers <- survey_data %>%
+  select(21:31) %>%
+  rownames_to_column("ID") %>% 
+  pivot_longer(!ID) %>%
+  group_by(name, value) %>%
+  summarize(n()) %>%
+  rename(count= `n()`) %>%
+  mutate(percent = count/(sum(count)),
+         value = case_when(value=="Strongly Agree" ~ "Strongly agree",
+                           value=="Neither agree or disagree" ~ "Neither agree nor disagree",
+                           TRUE ~ value),
+          label = ifelse(percent < .05, NA, percent))
+
+barriers$value <- factor(barriers$value, levels = c("Strongly agree", "Agree", "Neither agree nor disagree", "Disagree", "Strongly disagree"))
+
+# Step 1: Calculate total proportion of "Strongly agree" and "Agree"
+agg_barriers <- barriers %>%
+  filter(value %in% c("Strongly agree", "Agree")) %>%
+  group_by(name) %>%
+  summarize(agg_percent = sum(percent), .groups = "drop")
+
+# Step 2: Reorder `name` based on aggregated proportions
+barriers <- barriers %>%
+  left_join(agg_barriers, by = "name") %>%
+  mutate(name = fct_reorder(name, agg_percent, .desc = TRUE))
+
+# Wrap title text
+wrapped_title <- str_wrap("Finding the correct data was reported as the biggest barrier to respondents' ability to work with state data", width = 70)
+subtitle <- str_wrap("Question: Are the following issues barriers to your organization’s ability to use and access CT data sets?", width = 70)
+
+custom_palette <- c(
+   "Strongly agree" = "#E16E20",     # Example: Teal
+   "Agree" = "#FDB06F",            # Example: Yellow
+   "Neither agree nor disagree" = "#F5F5F5",           # Example: Orange
+  "Disagree" = "#A0C3FF",              # Example: Green
+  "Strongly disagree" = "#5A8FF0"      # Example: Teal
+)
+
+barriers_plot <- ggplot(barriers, aes(x = fct_reorder(str_wrap(name, width = 25), agg_percent), y = percent, fill = value)) +
+  geom_bar(stat = "identity", position = "fill", color = "white", width = 0.7) +  
+  scale_y_continuous(labels = scales::percent, expand = expansion(mult = c(0, 0.1))) +   
+  geom_text(aes(label = percent(label, 0.1)), position = position_stack(vjust = 0.5), 
+            size = 3, family = "Poppins", color = "black") + 
+  labs(title = wrapped_title,
+       subtitle = subtitle) +
+  coord_flip() +
+  custom_theme +
+  scale_fill_manual(values = custom_palette) +
+  theme(legend.title = element_blank(),
+        plot.subtitle = element_text(margin = margin(b = 30)),
+        legend.direction = "horizontal",
+        legend.position = c(-0.4, 1), 
+        legend.justification = c(0, 0),
+        legend.text = element_text(size = 8)) +
+  guides(fill = guide_legend(reverse = TRUE))
+
+  barriers_plot
+
+```
+
+-   71.4% of respondents said finding the correct data is a barrier to working with state data.
+-   69.5% of respondents said knowing where to find data is a barrier to working with state data.
+-   63.8% of respondents said challenges with data interoperability is a barrier.
+-   63.8% of respondents said that data quality is a barrier.
