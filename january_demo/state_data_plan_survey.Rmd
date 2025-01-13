@@ -10,6 +10,7 @@ This document highlights findings from the survey of external data users to info
 ```{r setup, include=FALSE, warning=FALSE, echo=FALSE}
 # Load necessary libraries
 library(tidyverse)
+library(RCurl)
 library(knitr)
 library(scales)
 library(stringr)
@@ -17,8 +18,8 @@ library(extrafont)  # For custom fonts
 # font_import()
 
 # Read and clean the survey data
-setwd("C:/R")
-survey_data <- read_csv("survey_results.csv", locale=locale(encoding="latin1")) %>%
+survey_data_link <- "https://github.com/CTOpenData/r-user-group/raw/main/january_demo/survey_results.csv"
+survey_data <- read_csv(survey_data_link, locale=locale(encoding="latin1")) %>%
   mutate(`Question: How do you utilize data from the State of Connecticut? (Select no more than 4)` = str_replace_all(
     `Question: How do you utilize data from the State of Connecticut? (Select no more than 4)`,
     c("I dont. ;" = "I don’t currently use data from the State of Connecticut	",
