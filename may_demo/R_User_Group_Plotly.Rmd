@@ -1,0 +1,480 @@
+---
+title: "R User Group Presentation 5/13/2025 Interactive Figures in Plotly"
+author: "Matt Hono, OPM"
+date: "2025-05-13"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+###Load libraries 
+library(tidyverse)
+library(plotly)
+library(data.table)
+library(scales) # used to format the table 
+
+
+#Plotly Reference Site: 
+## Link: https://plotly.com/r/
+
+# I will not be going into adding buttons, complex filters, or mapping today even though plotly does have functionality to do so. I would recommend using other software, such Tableau or ARC GIS for these types of plots. Today, I will only highlight basic plots that you can create in plotly. 
+
+
+##Import Accused Pretrial Inmates from the Open Data Portal
+##Link: https://data.ct.gov/Public-Safety/Accused-Pre-Trial-Inmates-in-Correctional-Faciliti/b674-jy6w/about_data
+
+#Updated nightly counts of detained pre-trial defendants 
+
+setwd("C:/Users/mhono/Downloads")
+
+bail20182023<-fread("Accused_Pre-Trial_Inmates_in_Correctional_Facilities_20250512.csv")
+
+## Clean base dataframe
+
+bail20182023 <- bail20182023 %>%
+  group_by(`LATEST ADMISSION DATE`,IDENTIFIER, RACE, GENDER, OFFENSE) %>%
+  summarise(bond_amount= mean(`BOND AMOUNT`, na.rm = TRUE)) %>%
+  ungroup()
+
+
+```
+
+## Line Graph of Bond Amounts over Time
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+#Create the data frame for the Plot
+bail20182023trends<- bail20182023 %>%
+  mutate(date =mdy(`LATEST ADMISSION DATE`),
+         year= year(date),
+         type_class = str_sub(OFFENSE, -2)) %>% ## last two characters of the string to extract charge type class
+  filter(str_detect(type_class, "F"),
+         !str_detect(type_class, "DELETED"),
+         !str_detect(type_class, "1"),
+         !str_detect(type_class, "EF"),
+         !str_detect(type_class, "FT")) %>%
+  mutate(type_class = str_trim(type_class, side = "both"))%>%
+  group_by(year, type_class) %>%
+  summarise(median_bond = median(bond_amount)) %>%
+  ungroup() #important step 
+
+#Create figure
+
+plot_ly(
+  data = bail20182023trends,
+  x = ~year,
+  y = ~median_bond,
+  color = ~type_class, # determine colors
+  colors = c("#3371E7", "#F26B1C", "#C92C3C", "#643BA7", "#24A39B"),
+  symbol = ~type_class, # changes the marker symbol 
+  type = 'scatter',
+  mode = 'lines+markers',  # Combines lines and markers
+  line = list( width = 4),
+  marker = list(size = 9, color = "black")
+) %>%
+  layout(
+    title = list(
+      text = "<b>Median Bond Amounts Over Time by Type Class</b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Year of Admission",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black"), # Font for x-axis ticks
+     rangeslider = list(visible = TRUE) ### Adding range slider-- allows you to control the view dynamically 
+    ),
+    yaxis = list(
+      title = list(
+        text = "Median Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+```
+
+## Bar Graphs of Bond Amounts over Time
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+plot_ly(
+  data = bail20182023trends,
+  x = ~year,
+  y = ~median_bond,
+  color = ~type_class,
+  colors = c("#3371E7", "#F26B1C", "#C92C3C", "#643BA7", "#24A39B"),
+  symbol = ~type_class,
+  type = 'bar') %>% #type of chart 
+  layout(
+    title = list(
+      text = "<b>Median Bond Amounts Over Time by Type Class </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Year of Admission",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black"), # Font for x-axis ticks
+      rangeslider = list(visible = TRUE)
+    ),
+    yaxis = list(
+      title = list(
+        text = "Median Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+# Horizontal bar chart
+
+plot_ly(
+  data = bail20182023trends,
+  x = ~median_bond,
+  y = ~year,
+  color = ~type_class,
+  colors = c("#3371E7", "#F26B1C", "#C92C3C", "#643BA7", "#24A39B"),
+  symbol = ~type_class,
+  type = 'bar',#type of chart 
+  orientation = 'h') %>% # Horizontal chart specification  
+  layout(
+    title = list(
+      text = "<b> Horizontal Median Bond Amounts Over Time by Type Class </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Median Bond Amount",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black") # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Year of Admission",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+
+```
+
+## Pie Chart of Inmate Count
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+bail20182023_pie <- bail20182023 %>%
+  group_by(RACE) %>%
+  summarise(count = n_distinct(IDENTIFIER))
+
+plot_ly(bail20182023_pie, labels = ~RACE, 
+        values = ~count, 
+        marker = list(colors = c("#3371E7", "#F26B1C", "#C92C3C", "#643BA7", "#24A39B")),
+        type = 'pie') %>%
+  layout(
+    title = list(
+      text = "<b>Count of Pretrial Inmates by Race</b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ))
+
+```
+
+## Simple Histogram Creation
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+bail20182023_histogram<- bail20182023 %>%
+  filter(bond_amount < 250000)
+
+
+plot_ly(
+  data = bail20182023_histogram,
+  x = ~bond_amount,
+  type = 'histogram') %>%
+  layout(
+    title = list(
+      text = "<b>Pretrial Bond Amounts Distribution</b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Bond Amount",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Frequency",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+
+```
+
+
+## Bond Amount Distributions by Gender (Box and Violin)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+bail20182023gender<- bail20182023 %>%
+  filter(bond_amount < 500000) %>%
+  mutate(type_class = str_sub(OFFENSE, -2)) %>%
+  filter(str_detect(type_class, "CF")) %>%
+   mutate(type_class = str_trim(type_class, side = "both"))
+
+plot_ly(
+  data = bail20182023gender,
+  x = ~GENDER,
+  y = ~bond_amount,
+  color = ~GENDER,
+  colors = c("#3371E7", "#F26B1C"),
+  type = 'box') %>%
+  layout(
+    title = list(
+      text = "<b>Box Plot of C Felony Bond Amounts by Gender </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Defendant Gender",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+
+plot_ly(
+  data = bail20182023gender,
+  x = ~GENDER,
+  y = ~bond_amount,
+  color = ~GENDER,
+  colors = c("#3371E7", "#F26B1C"),
+  type = 'violin') %>% ## Change type
+  layout(
+    title = list(
+      text = "<b> Violin Plot of C Felony Bond Amounts by Gender </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Defendant Gender",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+```
+
+## You can use Plotly's Subplot Functionality to Combine Multiple Figures
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+bail20182023gender_race<- bail20182023 %>%
+  filter(bond_amount < 1000000) %>%
+  group_by(GENDER, RACE) %>%
+  summarise(mean_bond = mean(bond_amount)) %>%
+  ungroup()
+
+plot1<-plot_ly(
+  data = bail20182023gender_race %>%
+  filter(GENDER == "M"),
+  x = ~RACE,
+  y = ~mean_bond,
+  color = ~GENDER,
+  colors = c("#3371E7"),
+  type = 'bar') %>% ###Chart type
+  layout(
+    title = list(
+      text = "<b> Mean Bond Amount by Race and Gender </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Defendant Race",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Mean Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+
+
+plot2<-plot_ly(
+  data = bail20182023gender_race %>%
+  filter(GENDER == "F"),
+  x = ~RACE,
+  y = ~mean_bond,
+  color = ~GENDER,
+  colors = c("#F26B1C"),
+  type = 'bar') %>%
+  layout(
+    title = list(
+      text = "<b> Mean Bond Amount by Race and Gender</b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Defendant Race",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Mean Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+
+subplot(plot1, plot2, nrows = 2) %>% 
+  layout(
+    title = list(
+      text = "<b> Mean Bond Amount by Race and Gender </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+```
+
+
+## Scatter Plot of Defendants (Editing the Hover Text)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+bail20182023_scatter <- bail20182023 %>%
+  mutate(type_class = str_sub(OFFENSE, -2)) %>%
+  mutate(type_class = str_trim(type_class, side = "both"))%>%
+  filter(`LATEST ADMISSION DATE` == "12/15/2023",
+         str_detect(type_class, "F|M")) 
+
+
+plot_ly(
+  data = bail20182023_scatter,
+  x = ~RACE,
+  y = ~bond_amount,
+  color = ~type_class,
+  colors = c("#3371E7", "#F26B1C", "#C92C3C", "#643BA7", "#24A39B"),
+  type = 'scatter', 
+  mode = 'markers',
+  hoverinfo = "text", ###Changing the hover text 
+  text = ~paste("Charge Type:", type_class, "<br>Gender:", GENDER, "<br>Bail Amount:" , round(bond_amount, 2))) %>%
+  layout(
+    title = list(
+      text = "<b> Defendants Detained on 12/15/2023 </b>",  # Title text
+      font = list(family = "Arial", size = 16, color = "black")  # Title font
+    ),
+    xaxis = list(
+      title = list(
+        text = "Defendant Race",  # X-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # X-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for x-axis ticks
+    ),
+    yaxis = list(
+      title = list(
+        text = "Bond Amount",  # Y-axis title
+        font = list(family = "Arial", size = 14, color = "black")  # Y-axis font
+      ),
+      tickfont = list(family = "Arial", size = 12, color = "black")  # Font for y-axis ticks
+    )
+  )
+
+```
+
+
+## Making a Table in Plotly
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+setwd("C:/Users/mhono/Downloads")
+
+bail20182023<-fread("Accused_Pre-Trial_Inmates_in_Correctional_Facilities_20250512.csv")
+
+bail20182023days <- bail20182023 %>%
+  mutate(download_date = mdy(`DOWNLOAD DATE`)) %>%
+  mutate(latest_admit_date = mdy(bail20182023$`LATEST ADMISSION DATE`)) %>%
+  mutate(
+    days_since_admit =
+      interval(latest_admit_date, download_date) %/% days(1)
+  ) %>%
+  group_by(IDENTIFIER, latest_admit_date) %>%
+  mutate(max_days_detained = max(days_since_admit)) %>%
+  ungroup() %>%
+  group_by(RACE,GENDER) %>%
+  summarise(median_bond = median(`BOND AMOUNT`),median_days_detained = median(max_days_detained) ) %>%
+  ungroup %>%
+  mutate(median_bond = comma(median_bond))
+
+
+plot_ly(
+  type = 'table',
+  header = list(
+    values = c("Race","Gender", "Median Bond Amount", "Median Days Detained"),  # Column headers
+    align = "center",
+    line = list(width = 1, color = "black"),
+    fill = list(color = "#3371E7"),
+    font = list(family = "Arial", size = 14, color = "white")  # Set font to Arial
+  ),
+  cells = list(
+    values = rbind(bail20182023days$RACE,bail20182023days$GENDER, as.character(bail20182023days$median_bond),bail20182023days$median_days_detained),  # Data for each column
+    align = "left",
+    line = list(width = 1, height = 1, color = "black"),
+    fill = list(color = c("white")),  
+    font = list(family = "Arial", size = 14, color = "black"),
+    height = 25
+)) %>%
+  layout(
+  autosize = TRUE)
+
+```
